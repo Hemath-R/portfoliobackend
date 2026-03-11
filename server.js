@@ -4,16 +4,16 @@ const fs = require("fs");
 
 const app = express();
 
-// Middleware
+// middleware
 app.use(cors());
 app.use(express.json());
 
-// Root route
+// root route
 app.get("/", (req, res) => {
   res.send("Backend server running successfully 🚀");
 });
 
-// Contact API
+// contact form API
 app.post("/contact", (req, res) => {
 
   console.log("Form Data Received:");
@@ -22,13 +22,14 @@ app.post("/contact", (req, res) => {
   const { name, email, subject, message } = req.body;
 
   const newMessage = {
-    name: name,
-    email: email,
-    subject: subject,
-    message: message,
+    name,
+    email,
+    subject,
+    message,
     date: new Date()
   };
 
+  // read existing data
   fs.readFile("data.json", "utf8", (err, data) => {
 
     let messages = [];
@@ -39,10 +40,11 @@ app.post("/contact", (req, res) => {
 
     messages.push(newMessage);
 
+    // save new data
     fs.writeFile("data.json", JSON.stringify(messages, null, 2), (err) => {
 
       if (err) {
-        console.log(err);
+        console.log("Error saving message:", err);
         res.status(500).send("Error saving message");
       } else {
         console.log("Message saved successfully");
@@ -55,7 +57,7 @@ app.post("/contact", (req, res) => {
 
 });
 
-// Server start
+// server start
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
