@@ -14,6 +14,7 @@ app.get("/", (req, res) => {
 
 app.post("/contact", (req, res) => {
 
+  console.log("Contact form hit");
   console.log("Form Data:", req.body);
 
   const { name, email, subject, message } = req.body;
@@ -30,7 +31,7 @@ app.post("/contact", (req, res) => {
     date: new Date().toISOString()
   };
 
-  // JSON FILE SAVE
+  // JSON SAVE
   const jsonFile = path.join(__dirname, "data.json");
 
   let messages = [];
@@ -44,8 +45,9 @@ app.post("/contact", (req, res) => {
 
   fs.writeFileSync(jsonFile, JSON.stringify(messages, null, 2));
 
-  // TEXT FILE SAVE
-  const txtFile = path.join(__dirname, "messages.txt");
+
+  // TXT SAVE → message/contact.txt
+  const txtFile = path.join(__dirname, "message", "contact.txt");
 
   const textData = `
 Name: ${name}
@@ -53,12 +55,12 @@ Email: ${email}
 Subject: ${subject}
 Message: ${message}
 Date: ${new Date().toLocaleString()}
-------------------------------------
+-------------------------------------
 `;
 
   fs.appendFileSync(txtFile, textData);
 
-  console.log("Saved to JSON & TXT");
+  console.log("Saved to message/contact.txt");
 
   res.json({ message: "Message saved successfully" });
 
