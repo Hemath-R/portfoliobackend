@@ -1125,6 +1125,8 @@
 
         fetch("https://portfoliobackend-gak4.onrender.com/contact", {
             method: "POST",
+            mode: "cors",
+            cache: "no-cache",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -1135,9 +1137,21 @@
                 message: message
             })
         })
-        .then(response => response.text())
-        .then(data => {
-            alert(data);
+        .then(async response => {
+            const text = await response.text();
+            if (!response.ok) {
+                console.error("Backend response error:", response.status, text);
+                alert("Message not sent: " + (text || response.status));
+                return;
+            }
+            console.log("Backend response:", response.status, text);
+            alert("Message sent successfully");
+            // clear form fields after success
+            form.reset();
+        })
+        .catch(error => {
+            console.error("Fetch error:", error);
+            alert("Network error sending message. Check your connection and retry.");
         });
     });
 });
