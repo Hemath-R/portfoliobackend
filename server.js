@@ -4,46 +4,67 @@ const fs = require("fs");
 const path = require("path");
 
 const app = express();
+
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req,res)=> res.send("OK"));
+app.get("/", (req, res) => {
 
-app.post("/contact", (req,res)=>{
-  console.log("Contact endpoint hit", new Date().toISOString());
-  console.log("Form Data Received:", req.body);
+  res.send("Backend server running successfully 🚀");
 
-  const {name,email,subject,message} = req.body;
-  if(!name||!email||!subject||!message){
-    console.warn("Missing field:", req.body);
-    return res.status(400).json({error:"All fields are required"});
+});
+
+app.post("/contact", (req, res) => {
+
+  console.log("Form Data Received:");
+  console.log(req.body);
+
+  const { name, email, subject, message } = req.body;
+
+  if (!name || !email || !subject || !message) {
+
+    console.log("Missing fields");
+
+    return res.status(400).json({ error: "All fields required" });
+
   }
 
-  const newMessage = {name,email,subject,message,date:new Date().toISOString()};
-  const dbFile = path.join(__dirname,"data.json");
+  const newMessage = {
+
+    name,
+    email,
+    subject,
+    message,
+    date: new Date()
+
+  };
+
+  const filePath = path.join(__dirname, "data.json");
 
   let messages = [];
-  try{
-    if(fs.existsSync(dbFile)){
-      const raw = fs.readFileSync(dbFile,"utf8");
-      messages = raw ? JSON.parse(raw) : [];
-    }
-  }catch(err){
-    console.error("Read data.json failed:", err);
-    messages = [];
+
+  if (fs.existsSync(filePath)) {
+
+    const data = fs.readFileSync(filePath);
+
+    messages = JSON.parse(data);
+
   }
 
   messages.push(newMessage);
 
-  try{
-    fs.writeFileSync(dbFile, JSON.stringify(messages,null,2),"utf8");
-    console.log("Message saved successfully:", newMessage);
-    return res.json({status:"ok", message:"Message saved successfully"});
-  }catch(err){
-    console.error("Write data.json failed:", err);
-    return res.status(500).json({error:"Error saving message"});
-  }
+  fs.writeFileSync(filePath, JSON.stringify(messages, null, 2));
+
+  console.log("Message saved successfully");
+
+  res.json({ message: "Message saved successfully" });
+
 });
 
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, ()=>console.log("Server running on port", PORT));
+const PORT = process.env.PORT || 10000;
+
+app.listen(PORT, () => {
+
+  console.log("Server running on port " + PORT);
+
+});
