@@ -1112,38 +1112,37 @@
             });
         });
 
-        document.addEventListener("DOMContentLoaded", function(){
-            const form = document.getElementById("contactForm");
-            form.addEventListener("submit", function(e){
-                e.preventDefault();
+       document.addEventListener("DOMContentLoaded", function(){
+    const form = document.getElementById("contactForm");
 
-                let name = document.getElementById("formName").value;
-                let email = document.getElementById("email").value;
-                let subject = document.getElementById("subject").value;
-                let message = document.getElementById("message").value;
+    form.addEventListener("submit", function(e){
+        e.preventDefault();
 
-                fetch("https://portfoliobackend-gak4.onrender.com/contact", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        name: name,
-                        email: email,
-                        subject: subject,
-                        message: message
-                    })
-                })
-                .then(res => res.text())
-                .then(data => {
-                    alert("Message Sent Successfully");
-                    form.reset();
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            });
+        let name = document.getElementById("formName").value;
+        let email = document.getElementById("email").value;
+        let subject = document.getElementById("subject").value;
+        let message = document.getElementById("message").value;
+
+        fetch("https://portfoliobackend-gak4.onrender.com/contact", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                subject: subject,
+                message: message
+            })
+        })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
         });
+    });
+});
+                
+        
     </script>
 </body>
 </html>
