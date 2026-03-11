@@ -9,34 +9,22 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-
-  res.send("Backend server running successfully 🚀");
-
+  res.send("Backend running");
 });
 
 app.post("/contact", (req, res) => {
 
-  console.log("Form Data Received:");
-  console.log(req.body);
+  console.log("Contact endpoint hit");
+  console.log("Form Data Received:", req.body);
 
   const { name, email, subject, message } = req.body;
 
-  if (!name || !email || !subject || !message) {
-
-    console.log("Missing fields");
-
-    return res.status(400).json({ error: "All fields required" });
-
-  }
-
   const newMessage = {
-
     name,
     email,
     subject,
     message,
     date: new Date()
-
   };
 
   const filePath = path.join(__dirname, "data.json");
@@ -44,11 +32,8 @@ app.post("/contact", (req, res) => {
   let messages = [];
 
   if (fs.existsSync(filePath)) {
-
     const data = fs.readFileSync(filePath);
-
     messages = JSON.parse(data);
-
   }
 
   messages.push(newMessage);
@@ -57,14 +42,12 @@ app.post("/contact", (req, res) => {
 
   console.log("Message saved successfully");
 
-  res.json({ message: "Message saved successfully" });
+  res.json({ success: true });
 
 });
 
 const PORT = process.env.PORT || 10000;
 
 app.listen(PORT, () => {
-
-  console.log("Server running on port " + PORT);
-
+  console.log("Server running on port", PORT);
 });
