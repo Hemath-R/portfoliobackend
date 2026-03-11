@@ -4,19 +4,22 @@ const fs = require("fs");
 
 const app = express();
 
-// middleware
+// Middleware
 app.use(cors());
 app.use(express.json());
 
 
-// root route
+// Root route
 app.get("/", (req, res) => {
     res.send("Backend server running successfully 🚀");
 });
 
 
-// contact API
+// Contact API
 app.post("/contact", (req, res) => {
+
+    console.log("New message received:");
+    console.log(req.body);
 
     const { name, email, subject, message } = req.body;
 
@@ -41,7 +44,8 @@ app.post("/contact", (req, res) => {
         fs.writeFile("data.json", JSON.stringify(messages, null, 2), (err) => {
 
             if (err) {
-                res.status(500).send("Error saving data");
+                console.log(err);
+                res.status(500).send("Error saving message");
             } else {
                 res.send("Message saved successfully");
             }
@@ -53,7 +57,7 @@ app.post("/contact", (req, res) => {
 });
 
 
-// server start
+// Server start
 const PORT = process.env.PORT || 8080;
 
 app.listen(PORT, () => {
